@@ -12,20 +12,23 @@
               class="form-control-file"
               id="fileInput{{ attachment.id }}"
               (change)="handleFileSelect($event, attachment.id)"
-              multiple
+              [multiple]="attachment.isMultiple"
             />
           </div>
-          <button
-            class="btn btn-danger"
-            (click)="removeAttachment(attachment.id)"
-          >
-            Remove
-          </button>
 
           <div *ngIf="attachmentData(i).src.length > 0">
             <div class="row">
-              <div class="col-md-4" *ngFor="let src of attachment.data.src">
+              <div
+                class="col-md-4"
+                *ngFor="let src of attachment.data.src; let imageIndex = index"
+              >
                 <img [src]="src" alt="Attachment" class="img-fluid mt-3" />
+                <button
+                  class="btn btn-danger"
+                  (click)="removeAttachment(attachment.id, imageIndex)"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           </div>

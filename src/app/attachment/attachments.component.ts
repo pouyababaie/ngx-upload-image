@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { IUploadAttachment } from './attachment.model';
 import { AttachmentService } from './attachment.service';
+import { attachments_2_from_api } from './attachments.mock-data';
 
 @Component({
   selector: 'app-attachments',
@@ -10,32 +11,50 @@ import { AttachmentService } from './attachment.service';
 export class AttachmentsComponent implements OnInit {
   attachments: IUploadAttachment[] = [];
 
+  @Input('viewMode') viewMode: boolean = false;
+
   attachmentData = (id: number) => {
     return this.attachments[id].data;
   };
 
   constructor(
     private attachmentService: AttachmentService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
     this.attachmentService.cdRef = cdr;
-    this.attachments = this.attachmentService.getAttachments()
+    if (this.viewMode) {
+      this.getAttachmentsFromApi();
+      return;
+    } else this.attachments = this.attachmentService.getAttachments();
   }
 
   ngOnInit(): void {}
 
   handleFileSelect(event: any, attachmentId: string): void {
-    const file = event.target.files[0];
-    this.attachmentService.selectAttachment(file, attachmentId);
+    const files = event.target.files as FileList;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      this.attachmentService.selectAttachment(file, attachmentId);
+    }
   }
 
-  removeAttachment(attachmentId: string): void {
-    this.attachmentService.removeAttachment(attachmentId);
+  removeAttachment(attachmentId: string, imageIndex?: number): void {
+    this.attachmentService.removeAttachment(attachmentId, imageIndex);
   }
 
   clearAttachments() {
     this.attachments.forEach((attachment) => {
-      this.removeAttachment(attachment.id);
+      attachment.data.src = [];
     });
+    const localStorageAttachments = JSON.parse(localStorage.getItem('attachments')) as IUploadAttachment[]
+
+    localStorageAttachments.forEach((attachment)=>attachment.data.src = [])
+    localStorage.setItem('attachments',JSON.stringify(localStorageAttachments))
+
+  }
+
+  getAttachmentsFromApi() {
+    this.attachments[0].data = attachments_2_from_api;
   }
 }

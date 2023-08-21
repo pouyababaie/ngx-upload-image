@@ -106,18 +106,20 @@ export class AttachmentService {
     }
   }
 
-  removeAttachment(attachmentId: string): void {
+  removeAttachment(attachmentId: string, imageIndex: number): void {
     const attachmentIndex = this.attachments.findIndex(
       (a) => a.id === attachmentId
     );
 
     if (attachmentIndex !== -1) {
       // Remove the 'src' property from the attachment
-      this.attachments[attachmentIndex].data.src = [];
+      this.attachments[attachmentIndex].data.src.splice(imageIndex, 1);
       this.attachments[attachmentIndex].isViewMode = false;
 
       // Remove the attachment from localStorage
       localStorage.setItem('attachments', JSON.stringify(this.attachments));
+
+      this.cdRef.detectChanges()
     }
   }
 
