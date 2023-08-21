@@ -1,0 +1,26 @@
+:host {
+  height: 100%;
+  display: block;
+}
+
+.attachment {
+  border: 1px dashed #ffae00;
+  background: #f1f1f1;
+  transition: ease-in 0.2s;
+
+  &:hover {
+    border: 1px dashed #ffae00;
+    background-color: #c1c1c1;
+    transition: ease-in 0.2s;
+  }
+  button.btn.btn-danger {
+    left: 5%;
+    bottom: 5%;
+    z-index: 999;
+  
+  }
+  .attachment-image{
+    filter: blur(3px) , grayscale(10px);
+  }
+}
+

@@ -1,0 +1,37 @@
+<div class="container">
+  <h1>Attachments</h1>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let attachment of attachments; let i = index">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ attachment.title }}</h5>
+          <div class="form-group">
+            <label for="fileInput{{ attachment.id }}">Select Image</label>
+            <input
+              type="file"
+              class="form-control-file"
+              id="fileInput{{ attachment.id }}"
+              (change)="handleFileSelect($event, attachment.id)"
+              multiple
+            />
+          </div>
+          <button
+            class="btn btn-danger"
+            (click)="removeAttachment(attachment.id)"
+          >
+            Remove
+          </button>
+
+          <div *ngIf="attachmentData(i).src.length > 0">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let src of attachment.data.src">
+                <img [src]="src" alt="Attachment" class="img-fluid mt-3" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-danger" (click)="clearAttachments()">Clear</button>
+</div>
